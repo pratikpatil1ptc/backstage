@@ -53,7 +53,10 @@ import {
 
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
-
+import {
+  EntityJenkinsContent,
+  isJenkinsAvailable,
+} from '@backstage-community/plugin-jenkins';
 import {
   EntityKubernetesContent,
   isKubernetesAvailable,
@@ -148,11 +151,20 @@ const overviewContent = (
 const serviceEntityPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
-      {overviewContent}
+        {overviewContent}
+    </EntityLayout.Route>
+    
+      <EntityLayout.Route path="/jenkins" title="Jenkins">
+      <EntityJenkinsContent />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/ci-cd" title="CI/CD">
-      {cicdContent}
+        <EntitySwitch>
+        <EntitySwitch.Case if={isJenkinsAvailable}>
+          <EntityJenkinsContent />
+        </EntitySwitch.Case>
+        {/* ... */}
+      </EntitySwitch>
     </EntityLayout.Route>
 
     <EntityLayout.Route
